@@ -1,0 +1,7 @@
+{
+  "function": "BuildSrc()",
+  "file": "BuildSrc.py",
+  "parent": "",
+  "description": "Build this project",
+  "subprocess": ["LoadPkg()"]
+}
