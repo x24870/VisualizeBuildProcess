@@ -3,5 +3,24 @@
   "file": "BuildSrc.py",
   "parent": "",
   "description": "Build this project",
-  "subprocess": ["LoadPkg()"]
+  "subprocess": [
+    {
+  "function": "subprocess()",
+  "file": "subprocess.py",
+  "parent": "",
+  "description": "this is subprocess",
+  "subprocess": [
+    
+  ]
+},
+        {
+  "function": "ASD()",
+  "file": "subprocess.py",
+  "parent": "",
+  "description": "this is subprocess",
+  "subprocess": [
+    
+  ]
+}
+  ]
 }
