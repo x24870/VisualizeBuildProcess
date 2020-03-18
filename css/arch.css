@@ -1,0 +1,34 @@
+div {
+  margin: 5px;
+  border-radius: 10px;
+}
+
+td {
+  background-color: antiquewhite;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+div.container {
+  width: 3000px;
+}
+
+div.row {
+  border: 1px solid;
+  width: fit-content;
+}
+
+div.col {
+  background-color: #1232b7;
+/*  min-height:300px;*/
+  min-width: 100px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+div.card {
+  background-color: #4cde79;
+  width: 250px;
+  min-height: 100px;
+  padding: 5px;
+}
