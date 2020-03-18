@@ -6,6 +6,11 @@ function get_table(row, col){
     let tr = $(document.createElement('tr'));
     for(let c=0; c<col; c++){
       let td = $(document.createElement('td'));
+      if(c == 0){
+        td.addClass('key');//TODO use <th> is better
+      }else{
+        td.addClass('value');
+      }
       tr.append(td);
     }
     table.append(tr);
@@ -35,7 +40,7 @@ function insert_data_to_table(table, json){
 function get_single_data_card(json, col_idx, sub_idx){
   // Create json table object
   let row = Object.keys(json).length;
-  const col = 2;//this parameter related to insert_data_to_table()
+  const col = 2;//this parameter related to insert_data_to_table() and get_table()
   let table = get_table(row, col);
   
   // Insert json data to the table
@@ -56,6 +61,7 @@ function get_single_data_card(json, col_idx, sub_idx){
 // Parse the josn data and generate the div.card html
 // Store these div into array and return
 function parse_json_to_gen_card(json, col_index, sub_index, arr){
+  console.debug(json['function'], 'COL:'+col_index, 'SUB:'+sub_index, 'ARR_LEN:'+arr.length);
   // Get template recursively
   [json].forEach(function(item, idx){
     // Get template of single json data
@@ -143,13 +149,41 @@ function get_col_num_from_class(class_str){
 // Append the cards to corresponding div col
 function arrange_card(container, card_arr){
   let div_row = container.children().eq(0);
-  console.log("arr lenghth: " + card_arr.length);
+  console.debug("arr lenghth: " + card_arr.length);
   for(idx in card_arr){
     let card = card_arr[idx];
     col_num = get_col_num_from_class(card.attr('class'));
     div_row.children().eq(col_num).append(card);
   }
   
+}
+
+
+
+// Action
+function clear_sub_col(col_num){
+  console.log(col_num);
+  $('.col').slice(col_num+2).hide();
+}
+
+function get_col_sub_number(obj){
+  classes = obj.attr('class').split(' ');
+  let col_num = -1;
+  let sub_num = -1;
+  for(let i=0; i<classes.length; i++){
+    if(classes[i].startsWith('col-')){
+      col_num = classes[i].split('col-')[1];
+    }else if(classes[i].startsWith('sub-')){
+      sub_num = classes[i].split('sub-')[1];
+    }
+  }
+    
+  return {'col': col_num, 'sub': sub_num};
+}
+
+function click_div_card(){
+  let template_index = get_col_sub_number($(this));
+  clear_sub_col(template_index['col']);
 }
 
 $(document).ready(function(){
@@ -166,6 +200,7 @@ $(document).ready(function(){
     // Insert the cards to div.col
     arrange_card(container, card_arr);
     
-    
+    // Bind action
+    $('div.card').bind('click', click_div_card);
   })
 });

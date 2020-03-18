@@ -1,12 +1,31 @@
+body {
+  font-family: Arial;
+}
+
 div {
   margin: 5px;
   border-radius: 10px;
 }
 
+table {
+  border-spacing: 3px;
+}
+
 td {
   background-color: antiquewhite;
   padding: 3px;
-  border-radius: 3px;
+  max-width: 250px;
+  border-radius: 5px;
+}
+
+td.key {
+  font-weight:bold;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+td.value {
+  text-align: left;
 }
 
 div.container {
@@ -28,7 +47,7 @@ div.col {
 
 div.card {
   background-color: #4cde79;
-  width: 250px;
+  min-width: 100px;
   min-height: 100px;
   padding: 5px;
 }
