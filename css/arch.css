@@ -39,7 +39,7 @@ div.row {
 
 div.col {
   background-color: #1232b7;
-/*  min-height:300px;*/
+  min-height:100px;
   min-width: 100px;
   display: inline-block;
   vertical-align: top;

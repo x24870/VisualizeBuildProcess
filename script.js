@@ -159,11 +159,11 @@ function arrange_card(container, card_arr){
 }
 
 
-
 // Action
-function clear_sub_col(col_num){
-  console.log(col_num);
-  $('.col').slice(col_num+2).hide();
+function reset_col_cards(col_num, sub_num){
+  console.log(col_num, sub_num);
+//  $('.col').eq(col_num).empty();
+  
 }
 
 function get_col_sub_number(obj){
@@ -183,23 +183,24 @@ function get_col_sub_number(obj){
 
 function click_div_card(){
   let template_index = get_col_sub_number($(this));
-  clear_sub_col(template_index['col']);
+  
+  // Clear sub sub div.col
+  $('.col').slice(Number(template_index['col']) + 2).hide();
+  // Reset sub div col
+  reset_col_cards(Number(template_index['col'])+1,
+                 Number(template_index['sub']));
 }
 
 $(document).ready(function(){
   $.getJSON("format.json", function(json){
-    
     // Parse each json data to div card
     // Then store these div object to a array
     let card_arr = [];
     parse_json_to_gen_card(json, 0, 0, card_arr);
-    
     // Create the container for contain div card
     let container = init_template(card_arr);
-    
     // Insert the cards to div.col
     arrange_card(container, card_arr);
-    
     // Bind action
     $('div.card').bind('click', click_div_card);
   })
