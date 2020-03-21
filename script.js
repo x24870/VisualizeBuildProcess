@@ -37,7 +37,7 @@ function insert_data_to_table(table, json){
 
 // Inser single json data into the table
 // Wrap the table into a div and reture
-function get_single_data_card(json, col_idx, sub_idx){
+function get_single_data_card(json, col_idx, sub_idx, parent_index){
   // Create json table object
   let row = Object.keys(json).length;
   const col = 2;//this parameter related to insert_data_to_table() and get_table()
@@ -51,6 +51,7 @@ function get_single_data_card(json, col_idx, sub_idx){
   div_card.addClass('card');
   div_card.addClass('col-' + col_idx);
   div_card.addClass('sub-' + sub_idx);
+  div_card.addClass('parent-' + parent_index);
   div_card.append(table);
   
   console.debug(div_card.attr('class'));
@@ -60,12 +61,13 @@ function get_single_data_card(json, col_idx, sub_idx){
 
 // Parse the josn data and generate the div.card html
 // Store these div into array and return
-function parse_json_to_gen_card(json, col_index, sub_index, arr){
-  console.debug(json['function'], 'COL:'+col_index, 'SUB:'+sub_index, 'ARR_LEN:'+arr.length);
+function parse_json_to_gen_card(json, col_index, sub_index, parent_index, arr){
+  console.debug(json['function'], 'COL:'+col_index, 'SUB:'+sub_index, 'PARENT_IDX:'+parent_index, 'ARR_LEN:'+arr.length);
   // Get template recursively
   [json].forEach(function(item, idx){
     // Get template of single json data
-    let card = get_single_data_card(item, col_index, sub_index);
+    let card = get_single_data_card(item, col_index, sub_index, parent_index);
+    parent_index = sub_index;
     
     // Append data to array
     arr.push(card);
@@ -78,6 +80,7 @@ function parse_json_to_gen_card(json, col_index, sub_index, arr){
           item[key][sub_num],
           col_index+1,
           sub_num,
+          sub_index,
           arr
         );
       }
@@ -160,29 +163,34 @@ function arrange_card(container, card_arr){
 
 
 // Action
-function reset_col_cards(col_num, sub_num){
-  console.log(col_num, sub_num);
-//  $('.col').eq(col_num).empty();
-  
+function reset_col_cards(col_index, parent_index){
+  console.log(col_index, parent_index);
+  let div_col = $('.col').eq(col_index);
+  div_col.children().hide();
+  div_col.children('.parent-' + parent_index).show();
+
 }
 
-function get_col_sub_number(obj){
+function get_template_index(obj){
   classes = obj.attr('class').split(' ');
   let col_num = -1;
   let sub_num = -1;
+  let parent_num = -1;
   for(let i=0; i<classes.length; i++){
     if(classes[i].startsWith('col-')){
       col_num = classes[i].split('col-')[1];
     }else if(classes[i].startsWith('sub-')){
       sub_num = classes[i].split('sub-')[1];
+    }else if(classes[i].startsWith('parent-')){
+      parent_num = classes[i].split('parent-')[1];
     }
   }
     
-  return {'col': col_num, 'sub': sub_num};
+  return {'col': col_num, 'sub': sub_num, 'parent': parent_num};
 }
 
 function click_div_card(){
-  let template_index = get_col_sub_number($(this));
+  let template_index = get_template_index($(this));
   
   // Clear sub sub div.col
   $('.col').slice(Number(template_index['col']) + 2).hide();
@@ -196,7 +204,7 @@ $(document).ready(function(){
     // Parse each json data to div card
     // Then store these div object to a array
     let card_arr = [];
-    parse_json_to_gen_card(json, 0, 0, card_arr);
+    parse_json_to_gen_card(json, 0, 0, 0, card_arr);
     // Create the container for contain div card
     let container = init_template(card_arr);
     // Insert the cards to div.col
