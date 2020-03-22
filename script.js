@@ -74,7 +74,7 @@ function parse_json_to_gen_card(json, col_index, sub_index, parent_queue, arr){
     // Append data to array
     arr.push(card);
     //Push current arr index into parent index queue
-    parent_queue.push(arr.length);
+    parent_queue.push(arr.length-1);
 
     // Generate subproccess template
     const key = 'subprocess'
@@ -170,13 +170,23 @@ function arrange_card(container, card_arr){
 
 // Action
 function reset_col_cards(col_index, parent_index, card_arr){
-  console.log(col_index, parent_index);
+  console.log('Reset: ', 'col:'+col_index, 'show card that parent is:'+parent_index);
   let div_col = $('.col').eq(col_index);
-  div_col.children().remove();
-  for(let i=0; i<card_arr.length; i++){
-//    if(card_arr[i]){}
-    console.log(card_arr[i]);
+  div_col.children().hide();
+  for(let i=0; i<div_col.children().length; i++){
+    let div_card = div_col.children().eq(i);
+    let template_index = get_template_index(div_card);
+    if(template_index['parent'] == parent_index){
+      div_card.show();
+    }
   }
+//  div_col.children().remove();
+//  for(let i=0; i<card_arr.length; i++){
+//    let template_index = get_template_index(card_arr[i]);
+//    if(template_index['parent'] == parent_index){
+//      $('.col.col-'+col_index).append(card_arr[i]);
+//    }
+//  }
 }
 
 function get_template_index(obj){
@@ -197,11 +207,15 @@ function get_template_index(obj){
   return {'col': col_num, 'arrIdx': arr_idx, 'parent': parent_num};
 }
 
-function click_div_card(card_arr){
-  let template_index = get_template_index($(this));
+function click_div_card(selected_card, card_arr){
+  let template_index = get_template_index(selected_card);
+  console.log('Selected card ', 'col:'+template_index['col'], 'arrIdx:'+template_index['arrIdx'], 'parent:'+template_index['parent'])
   
   // Clear sub sub div.col
-  $('.col').slice(Number(template_index['col']) + 2).hide();
+  $('.col').slice(Number(template_index['col']) + 2).children().hide();
+  // Mark selected card
+  $('.card').removeClass('focus');
+  selected_card.addClass('focus');
   // Reset sub div col
   reset_col_cards(Number(template_index['col'])+1,
                  Number(template_index['arrIdx']),
@@ -220,6 +234,8 @@ $(document).ready(function(){
     // Insert the cards to div.col
     arrange_card(container, card_arr);
     // Bind action
-    $('div.card').bind('click', card_arr, click_div_card);
+    $('div.card').bind('click', function(){
+      click_div_card($(this) ,card_arr);
+    });
   })
 });

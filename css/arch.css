@@ -51,3 +51,7 @@ div.card {
   min-height: 100px;
   padding: 5px;
 }
+
+div.card.focus {
+  background-color: #fd479b;
+}
