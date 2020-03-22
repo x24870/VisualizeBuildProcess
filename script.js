@@ -1,3 +1,5 @@
+const ANIMATION_TIME = 500;
+
 // TODO: pack the related function into an object
 
 function get_table(row, col){
@@ -140,6 +142,7 @@ function init_template(card_arr){
   let div_row = create_div_row(container);
   let col_count = get_col_count(card_arr);
   create_div_col(div_row, col_count);
+  
   return container;
 }
 
@@ -172,12 +175,12 @@ function arrange_card(container, card_arr){
 function reset_col_cards(col_index, parent_index, card_arr){
   console.log('Reset: ', 'col:'+col_index, 'show card that parent is:'+parent_index);
   let div_col = $('.col').eq(col_index);
-  div_col.children().hide();
+  div_col.children().hide(ANIMATION_TIME);
   for(let i=0; i<div_col.children().length; i++){
     let div_card = div_col.children().eq(i);
     let template_index = get_template_index(div_card);
     if(template_index['parent'] == parent_index){
-      div_card.show();
+      div_card.show(ANIMATION_TIME);
     }
   }
 //  div_col.children().remove();
@@ -212,7 +215,7 @@ function click_div_card(selected_card, card_arr){
   console.log('Selected card ', 'col:'+template_index['col'], 'arrIdx:'+template_index['arrIdx'], 'parent:'+template_index['parent'])
   
   // Clear sub sub div.col
-  $('.col').slice(Number(template_index['col']) + 2).children().hide();
+  $('.col').slice(Number(template_index['col']) + 2).children().hide(ANIMATION_TIME);
   // Mark selected card
   $('.card').removeClass('focus');
   selected_card.addClass('focus');
@@ -237,5 +240,7 @@ $(document).ready(function(){
     $('div.card').bind('click', function(){
       click_div_card($(this) ,card_arr);
     });
+    //init UI rendering
+    click_div_card($('div.card.col-0').eq(0) ,card_arr);
   })
 });
