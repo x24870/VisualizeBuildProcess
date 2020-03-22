@@ -37,7 +37,9 @@ function insert_data_to_table(table, json){
 
 // Inser single json data into the table
 // Wrap the table into a div and reture
-function get_single_data_card(json, col_idx, sub_idx, parent_index){
+function get_single_data_card(json, col_idx, arr_idx, parent_index){
+  console.debug(json['function']);
+  console.debug('col:'+col_idx, 'arr_idx:'+arr_idx, 'parent:'+parent_index);
   // Create json table object
   let row = Object.keys(json).length;
   const col = 2;//this parameter related to insert_data_to_table() and get_table()
@@ -50,7 +52,7 @@ function get_single_data_card(json, col_idx, sub_idx, parent_index){
   let div_card = $(document.createElement('div'));
   div_card.addClass('card');
   div_card.addClass('col-' + col_idx);
-  div_card.addClass('sub-' + sub_idx);
+  div_card.addClass('arrIdx-' + arr_idx);
   div_card.addClass('parent-' + parent_index);
   div_card.append(table);
   
@@ -61,16 +63,18 @@ function get_single_data_card(json, col_idx, sub_idx, parent_index){
 
 // Parse the josn data and generate the div.card html
 // Store these div into array and return
-function parse_json_to_gen_card(json, col_index, sub_index, parent_index, arr){
-  console.debug(json['function'], 'COL:'+col_index, 'SUB:'+sub_index, 'PARENT_IDX:'+parent_index, 'ARR_LEN:'+arr.length);
+function parse_json_to_gen_card(json, col_index, sub_index, parent_queue, arr){
+  console.debug(json['function'], 'COL:'+col_index, 'SUB:'+sub_index, 'PARENT_IDX:'+parent_queue, 'ARR_LEN:'+arr.length);
   // Get template recursively
   [json].forEach(function(item, idx){
     // Get template of single json data
-    let card = get_single_data_card(item, col_index, sub_index, parent_index);
-    parent_index = sub_index;
-    
+    let parent_index = parent_queue[parent_queue.length-1];
+    console.debug(parent_queue);
+    let card = get_single_data_card(item, col_index, arr.length, parent_index);
     // Append data to array
     arr.push(card);
+    //Push current arr index into parent index queue
+    parent_queue.push(arr.length);
 
     // Generate subproccess template
     const key = 'subprocess'
@@ -80,11 +84,13 @@ function parse_json_to_gen_card(json, col_index, sub_index, parent_index, arr){
           item[key][sub_num],
           col_index+1,
           sub_num,
-          sub_index,
+          parent_queue,
           arr
         );
       }
     }
+    
+    parent_queue.pop();
   });
 }
 
@@ -163,12 +169,14 @@ function arrange_card(container, card_arr){
 
 
 // Action
-function reset_col_cards(col_index, parent_index){
+function reset_col_cards(col_index, parent_index, card_arr){
   console.log(col_index, parent_index);
   let div_col = $('.col').eq(col_index);
-  div_col.children().hide();
-  div_col.children('.parent-' + parent_index).show();
-
+  div_col.children().remove();
+  for(let i=0; i<card_arr.length; i++){
+//    if(card_arr[i]){}
+    console.log(card_arr[i]);
+  }
 }
 
 function get_template_index(obj){
@@ -179,24 +187,25 @@ function get_template_index(obj){
   for(let i=0; i<classes.length; i++){
     if(classes[i].startsWith('col-')){
       col_num = classes[i].split('col-')[1];
-    }else if(classes[i].startsWith('sub-')){
-      sub_num = classes[i].split('sub-')[1];
+    }else if(classes[i].startsWith('arrIdx-')){
+      arr_idx = classes[i].split('arrIdx-')[1];
     }else if(classes[i].startsWith('parent-')){
       parent_num = classes[i].split('parent-')[1];
     }
   }
     
-  return {'col': col_num, 'sub': sub_num, 'parent': parent_num};
+  return {'col': col_num, 'arrIdx': arr_idx, 'parent': parent_num};
 }
 
-function click_div_card(){
+function click_div_card(card_arr){
   let template_index = get_template_index($(this));
   
   // Clear sub sub div.col
   $('.col').slice(Number(template_index['col']) + 2).hide();
   // Reset sub div col
   reset_col_cards(Number(template_index['col'])+1,
-                 Number(template_index['sub']));
+                 Number(template_index['arrIdx']),
+                 card_arr);
 }
 
 $(document).ready(function(){
@@ -204,12 +213,13 @@ $(document).ready(function(){
     // Parse each json data to div card
     // Then store these div object to a array
     let card_arr = [];
-    parse_json_to_gen_card(json, 0, 0, 0, card_arr);
+    let parent_queue = [];
+    parse_json_to_gen_card(json, 0, 0, parent_queue, card_arr);
     // Create the container for contain div card
     let container = init_template(card_arr);
     // Insert the cards to div.col
     arrange_card(container, card_arr);
     // Bind action
-    $('div.card').bind('click', click_div_card);
+    $('div.card').bind('click', card_arr, click_div_card);
   })
 });
