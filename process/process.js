@@ -96,23 +96,6 @@ function parse_json_to_gen_card(json, col_index, sub_index, parent_queue, arr){
   });
 }
 
-// Figure out how many div col needs to be create
-function get_col_count(card_arr){
-  let last_card = card_arr[card_arr.length-1];
-  let classes = last_card.attr('class').split(' ');
-  let col_count = -1;
-  
-  for(let i=0; i<classes.length; i++){
-    if (classes[i].startsWith('col-')){
-      col_count = Number(classes[i].split('col-')[1]) + 1;
-      console.debug('col_count: ' + col_count);
-      break;
-    }
-  }
-  
-  return col_count;
-}
-
 // Create a div with class 'row'
 // Return the div element
 function create_div_row(container){
@@ -140,7 +123,7 @@ function create_div_col(container, col_count){
 function init_template(card_arr){
   let container = $('.container');//This element has already exist in html file
   let div_row = create_div_row(container);
-  let col_count = get_col_count(card_arr);
+  let col_count = 10;//TODO: get the count of col
   create_div_col(div_row, col_count);
   
   return container;
