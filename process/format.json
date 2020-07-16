@@ -141,6 +141,59 @@
           ]
         }
       ]
+    },
+    {
+      "function": "BuildRomImage(BinName)",
+      "file": "RomImage.py",
+      "parent": "",
+      "description": "Build rom.ima",
+      "subprocess": [
+        {
+          "function": "CreateCleanImageTree()",
+          "file": "RomImage.py",
+          "parent": "",
+          "description": "Create clean image tree for rom.ima",
+          "subprocess": [
+            {
+              "function": "CopyDirRecursive(cfg.ImageTree, CleanTree)",
+              "file": "helper.py",
+              "parent": "",
+              "description": "Copy ImageTree to cleanTree recursively",
+              "subprocess": []
+            }
+          ]
+        },
+        {
+          "function": "CreateFileSyetems()",
+          "file": "RomImage.py",
+          "parent": "",
+          "description": "Get the map of memory allocation for the rom file. This function will create different file system according to the map.",
+          "subprocess": [
+            {
+              "function": "CreateFileSyetemsBin()",
+              "file": "RomImage.py",
+              "parent": "",
+              "description": "Create file system tree in binary format",
+              "subprocess": []
+            }
+          ]
+        },
+        {
+          "function": "GenerateImage()",
+          "file": "RomImage.py",
+          "parent": "",
+          "description": "Generate the image file",
+          "subprocess": [
+            {
+              "function": "genimg()",
+              "file": "GenImage.py",
+              "parent": "",
+              "description": "Write binary data to image file",
+              "subprocess": []
+            }
+          ]
+        }
+      ]
     }
   ]
 }
