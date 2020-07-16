@@ -5,132 +5,142 @@
   "description": "Enter point of Building process",
   "subprocess": [
     {
-  "function": "SetGlobalVars()",
-  "file": "Startup.py",
-  "parent": "",
-  "description": "Set the Globle variables during building process",
-  "subprocess": [
-  ]
-},
+      "function": "SetGlobalVars()",
+      "file": "Startup.py",
+      "parent": "",
+      "description": "Set the Globle variables during building process",
+      "subprocess": []
+    },
     {
-  "function": "CreateDirs()",
-  "file": "Startup.py",
-  "parent": "",
-  "description": "",
-  "subprocess": [
-  ]
-},
+      "function": "CreateDirs()",
+      "file": "Startup.py",
+      "parent": "",
+      "description": "",
+      "subprocess": []
+    },
     {
-  "function": "patchinfo()",
-  "file": "patcher.py",
-  "parent": "",
-  "description": "",
-  "subprocess": [
+      "function": "ParseProject()",
+      "file": "Parseprj.py",
+      "parent": "",
+      "description": "Parse .PRJ file to get configs",
+      "subprocess": []
+    },
     {
-  "function": "CreatePatchlist()",
-  "file": "patcher.py",
-  "parent": "",
-  "description": "Create a list of all the patches selected in PRJ file",
-  "subprocess": [
-  ]
-},
+      "function": "patchinfo()",
+      "file": "patcher.py",
+      "parent": "",
+      "description": "",
+      "subprocess": [
+        {
+          "function": "CreatePatchlist()",
+          "file": "patcher.py",
+          "parent": "",
+          "description": "Create a list of all the patches selected in PRJ file",
+          "subprocess": []
+        },
+        {
+          "function": "PatchesInfo()",
+          "file": "patcher.py",
+          "parent": "",
+          "description": "scan every patch file and apply its changes",
+          "subprocess": []
+        }
+      ]
+    },
     {
-  "function": "PatchesInfo()",
-  "file": "patcher.py",
-  "parent": "",
-  "description": "scan every patch file and apply its changes",
-  "subprocess": [
-  ]
-}
-  ]
-},
+      "function": "ResolveDepends()",
+      "file": "Depend.py",
+      "parent": "",
+      "description": "",
+      "subprocess": [
+        {
+          "function": "CreateOrderList()",
+          "file": "Depend.py",
+          "parent": "",
+          "description": "",
+          "subprocess": []
+        },
+        {
+          "function": "OrderList2BuildPkgList()",
+          "file": "Depend.py",
+          "parent": "",
+          "description": "turn OrderList into BuildPkgList",
+          "subprocess": []
+        },
+        {
+          "function": "BuildTouchList()",
+          "file": "Depend.py",
+          "parent": "",
+          "description": "For every package, Create list of packages to be rebuild if the package is built",
+          "subprocess": []
+        }
+      ]
+    },
     {
-  "function": "ResolveDepends()",
-  "file": "Depend.py",
-  "parent": "",
-  "description": "",
-  "subprocess": [
-    {
-  "function": "CreateOrderList()",
-  "file": "Depend.py",
-  "parent": "",
-  "description": "",
-  "subprocess": [
-  ]
-},
-{
-  "function": "OrderList2BuildPkgList()",
-  "file": "Depend.py",
-  "parent": "",
-  "description": "turn OrderList into BuildPkgList",
-  "subprocess": [
-  ]
-},
-{
-  "function": "BuildTouchList()",
-  "file": "Depend.py",
-  "parent": "",
-  "description": "For every package, Create list of packages to be rebuild if the package is built",
-  "subprocess": [
-  ]
-}
-  ]
-},
-    {
-  "function": "LoadAndBuild()",
-  "file": "BuildSrc.py",
-  "parent": "",
-  "description": "Build packages in the cfg.BuildPkgList",
-  "subprocess": [
-    {
-  "function": "LoadSourcePkg()",
-  "file": "LoadOkg.py",
-  "parent": "",
-  "description": "1. Extract to Source. 2. Create Link. 3. Apply Patch if exists 4. Copy Source to Pristine",
-  "subprocess": [
-  ]
-},
-    {
-  "function": "BuildSrc()",
-  "file": "BuildSrc.py",
-  "parent": "",
-  "description": "1. Check if source been modified. 2. ExecuteSrcSPXRule('clean_source') 3.ExecuteSrcSPXRule('build_source')",
-  "subprocess": [
-    {
-  "function": "CheckForChanges()",
-  "file": "BuildSrc.py",
-  "parent": "",
-  "description": "Check the difference of directory cfg.Source and cfg.Build",
-  "subprocess": [
-  ]
-},
-{
-  "function": "ExecuteSrcSPXRule('clean_source')",
-  "file": "ExecRules.py",
-  "parent": "",
-  "description": "",
-  "subprocess": [
-  ]
-},
-{
-  "function": "ExecuteSrcSPXRule('build_source')",
-  "file": "ExecRules.py",
-  "parent": "",
-  "description": "",
-  "subprocess": [
-  ]
-},
-{
-  "function": "ExecuteSrcSPXRule('build_package-'+BinName)",
-  "file": "ExecRules.py",
-  "parent": "",
-  "description": "Build the Binary Packages",
-  "subprocess": [
-  ]
-}
-  ]
-}
-  ]
-}
+      "function": "LoadAndBuild()",
+      "file": "BuildSrc.py",
+      "parent": "",
+      "description": "Build packages in the cfg.BuildPkgList",
+      "subprocess": [
+        {
+          "function": "LoadSourcePkg()",
+          "file": "LoadOkg.py",
+          "parent": "",
+          "description": "1. Extract to Source. 2. Create Link. 3. Apply Patch if exists 4. Copy Source to Pristine",
+          "subprocess": []
+        },
+        {
+          "function": "BuildSrc()",
+          "file": "BuildSrc.py",
+          "parent": "",
+          "description": "1. Check if source been modified. 2. ExecuteSrcSPXRule('clean_source') 3.ExecuteSrcSPXRule('build_source')",
+          "subprocess": [
+            {
+              "function": "CheckForChanges()",
+              "file": "BuildSrc.py",
+              "parent": "",
+              "description": "Check the difference of directory cfg.Source and cfg.Build",
+              "subprocess": []
+            },
+            {
+              "function": "ExecuteSrcSPXRule('clean_source')",
+              "file": "ExecRules.py",
+              "parent": "",
+              "description": "",
+              "subprocess": []
+            },
+            {
+              "function": "ExecuteSrcSPXRule('build_source')",
+              "file": "ExecRules.py",
+              "parent": "",
+              "description": "",
+              "subprocess": []
+            },
+            {
+              "function": "ExecuteSrcSPXRule('build_package-'+BinName)",
+              "file": "ExecRules.py",
+              "parent": "",
+              "description": "Build the Binary Packages",
+              "subprocess": []
+            },
+            {
+              "function": "InstallBinary(BinName)",
+              "file": "BuildSrc.py",
+              "parent": "",
+              "description": "Install binary file",
+              "subprocess": [
+                {
+                  "function": "ExeDevInstall(BinName)",
+                  "file": "BuildSrc.py",
+                  "parent": "",
+                  "description": "Execute dev-install",
+                  "subprocess": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
