@@ -156,7 +156,7 @@ function arrange_card(container, card_arr){
 
 // Action
 function reset_col_cards(col_index, parent_index, card_arr){
-  console.log('Reset: ', 'col:'+col_index, 'show card that parent is:'+parent_index);
+  console.debug('Reset: ', 'col:'+col_index, 'show card that parent is:'+parent_index);
   let div_col = $('.col').eq(col_index);
   div_col.children().hide(ANIMATION_TIME);
   for(let i=0; i<div_col.children().length; i++){
@@ -195,7 +195,7 @@ function get_template_index(obj){
 
 function click_div_card(selected_card, card_arr){
   let template_index = get_template_index(selected_card);
-  console.log('Selected card ', 'col:'+template_index['col'], 'arrIdx:'+template_index['arrIdx'], 'parent:'+template_index['parent'])
+  console.debug('Selected card ', 'col:'+template_index['col'], 'arrIdx:'+template_index['arrIdx'], 'parent:'+template_index['parent'])
   
   // Clear sub sub div.col
   $('.col').slice(Number(template_index['col']) + 2).children().hide(ANIMATION_TIME);
@@ -206,6 +206,9 @@ function click_div_card(selected_card, card_arr){
   reset_col_cards(Number(template_index['col'])+1,
                  Number(template_index['arrIdx']),
                  card_arr);
+
+  //scroll
+  window.scroll(selected_card.position().left - selected_card.width()/0.7, selected_card.position().top - selected_card.height()/3);
 }
 
 $(document).ready(function(){
