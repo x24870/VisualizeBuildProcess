@@ -29,6 +29,11 @@ function insert_data_to_table(table, json){
       table.children().eq(index).children().eq(1).text(json[key]);
     }else{
       table.children().eq(index).children().eq(0).text(key);
+      let text = '';
+      for(sub_p of json[key]){
+        text += sub_p['function'] + '\n';
+      }
+      table.children().eq(index).children().eq(1).text(text);
       // TODO: deal with subprocess
     }
     index++;

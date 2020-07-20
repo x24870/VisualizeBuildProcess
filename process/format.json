@@ -86,14 +86,14 @@
           "function": "LoadSourcePkg()",
           "file": "LoadOkg.py",
           "parent": "",
-          "description": "1. Extract to Source. 2. Create Link. 3. Apply Patch if exists 4. Copy Source to Pristine",
+          "description": "1. Extract to Source.\n2. Create Link.\n3. Apply Patch if exists\n4. Copy Source to Pristine",
           "subprocess": []
         },
         {
           "function": "BuildSrc()",
           "file": "BuildSrc.py",
           "parent": "",
-          "description": "1. Check if source been modified. 2. ExecuteSrcSPXRule('clean_source') 3.ExecuteSrcSPXRule('build_source')",
+          "description": "1. Check if source been modified.\n2. ExecuteSrcSPXRule('clean_source')\n3.ExecuteSrcSPXRule('build_source')",
           "subprocess": [
             {
               "function": "CheckForChanges()",
@@ -167,7 +167,7 @@
           "function": "CreateFileSyetems()",
           "file": "RomImage.py",
           "parent": "",
-          "description": "Get the map of memory allocation for the rom file. This function will create different file system according to the map.",
+          "description": "Get the map of memory allocation for the rom file.\nThis function will create different file system according to the map.",
           "subprocess": [
             {
               "function": "CreateFileSyetemsBin()",

@@ -7,7 +7,7 @@ body {
 }
 
 div {
-  margin: 5px;
+  margin       : 5px;
   border-radius: 10px;
 }
 
@@ -17,20 +17,21 @@ table {
 
 td {
   background-color: antiquewhite;
-  padding: 3px;
-  max-width: 300px;
-  border-radius: 5px;
+  padding         : 3px;
+  border-radius   : 5px;
+  /* allow new line in td and wrap content*/
+  white-space     : pre-wrap;
 }
 
 td.key {
-  font-weight:bold;
+  font-weight   : bold;
   text-transform: capitalize;
-  text-align: center;
+  text-align    : center;
 }
 
 td.value {
   text-align: left;
-  width: 300px;
+  width     : 100%;
 }
 
 div.container {
@@ -38,23 +39,24 @@ div.container {
 }
 
 div.row {
-  border: 1px solid;
+  /* border: 1px solid; */
   width: fit-content;
 }
 
 div.col {
   /* background-color: #3d3d3d; */
-  min-height:100px;
-  min-width: 100px;
-  display: inline-block;
-  vertical-align: top;
+  min-height    : 100px;
+  min-width     : 100px;
+  max-width     : 500px;
+  display       : inline-block;
+  vertical-align: middle;
 }
 
 div.card {
   background-color: #2f6897;
-  min-width: 100px;
-  min-height: 100px;
-  padding: 5px;
+  min-width       : 100px;
+  min-height      : 100px;
+  padding         : 5px;
 }
 
 div.card.focus {
