@@ -18,7 +18,7 @@ table {
 td {
   background-color: antiquewhite;
   padding: 3px;
-  max-width: 250px;
+  max-width: 300px;
   border-radius: 5px;
 }
 
@@ -30,6 +30,7 @@ td.key {
 
 td.value {
   text-align: left;
+  width: 300px;
 }
 
 div.container {
@@ -42,7 +43,7 @@ div.row {
 }
 
 div.col {
-  background-color: #1232b7;
+  /* background-color: #3d3d3d; */
   min-height:100px;
   min-width: 100px;
   display: inline-block;
@@ -50,12 +51,12 @@ div.col {
 }
 
 div.card {
-  background-color: #4cde79;
+  background-color: #2f6897;
   min-width: 100px;
   min-height: 100px;
   padding: 5px;
 }
 
 div.card.focus {
-  background-color: #fd479b;
+  background-color: #ff7361;
 }
