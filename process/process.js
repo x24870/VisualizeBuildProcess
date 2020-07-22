@@ -1,3 +1,5 @@
+import {includeHTML} from '../include_html.js'
+
 const ANIMATION_TIME = 500;
 const closeModal = document.getElementById('close-modal');
 const modal = document.getElementsByClassName('modal')[0];
@@ -26,14 +28,15 @@ function get_table(row, col) {
 
 function insert_data_to_table(table, json) {
   let index = 0;
-  for (key in json) {
+
+  for (let key in json) {
     if (key != 'subprocess') {
       table.children().eq(index).children().eq(0).text(key);
       table.children().eq(index).children().eq(1).text(json[key]);
     } else {
       table.children().eq(index).children().eq(0).text(key);
       let text = '';
-      for (sub_p of json[key]) {
+      for (let sub_p of json[key]) {
         text += sub_p['function'] + '\n';
       }
       table.children().eq(index).children().eq(1).text(text);
@@ -139,8 +142,8 @@ function init_template(card_arr) {
 
 function get_col_num_from_class(class_str) {
   let col_num = -1;
-  class_arr = class_str.split(' ');
-  for (idx in class_arr) {
+  let class_arr = class_str.split(' ');
+  for (let idx in class_arr) {
     if (class_arr[idx].startsWith('col-')) {
       col_num = class_arr[idx].split('col-')[1];
       break;
@@ -153,9 +156,9 @@ function get_col_num_from_class(class_str) {
 function arrange_card(container, card_arr) {
   let div_row = container.children().eq(0);
   console.debug("arr lenghth: " + card_arr.length);
-  for (idx in card_arr) {
+  for (let idx in card_arr) {
     let card = card_arr[idx];
-    col_num = get_col_num_from_class(card.attr('class'));
+    let col_num = get_col_num_from_class(card.attr('class'));
     div_row.children().eq(col_num).append(card);
   }
 
@@ -184,9 +187,9 @@ function reset_col_cards(col_index, parent_index, card_arr) {
 }
 
 function get_template_index(obj) {
-  classes = obj.attr('class').split(' ');
+  let classes = obj.attr('class').split(' ');
   let col_num = -1;
-  let sub_num = -1;
+  let arr_idx = -1
   let parent_num = -1;
   for (let i = 0; i < classes.length; i++) {
     if (classes[i].startsWith('col-')) {
@@ -220,6 +223,8 @@ function click_div_card(selected_card, card_arr) {
 }
 
 $(document).ready(function () {
+  includeHTML();
+
   $.getJSON("format.json", function (json) {
     // Parse each json data to div card
     // Then store these div object to a array
@@ -244,8 +249,8 @@ $(document).ready(function () {
     modal.style.display = 'none';
   }
   showModal.onclick = function (){
-    offset_x = document.documentElement.scrollLeft.toString();
-    offset_y = document.documentElement.scrollTop.toString();
+    let offset_x = document.documentElement.scrollLeft.toString();
+    let offset_y = document.documentElement.scrollTop.toString();
     modal.style.left = offset_x + 'px';
     modal.style.top = offset_y + 'px';
     modal.style.display = 'block';
