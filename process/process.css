@@ -64,6 +64,8 @@ div.card {
   min-width       : 100px;
   min-height      : 100px;
   padding         : 5px;
+  margin          : 5px;
+  border-radius   : 5px;
 }
 
 div.card.focus {
@@ -71,10 +73,9 @@ div.card.focus {
 }
 
 .modal {
-  position: relative;
+  position        : relative;
   position        : absolute;
-  background-color: rgb(44, 44, 44);
-  opacity         : .7;
+  background-color: rgb(44, 44, 44, 0.8);
   width           : 100%;
   height          : 100%;
   z-index         : 1;
@@ -84,12 +85,12 @@ div.card.focus {
   float      : right;
   font-weight: bold;
   margin     : 1rem;
-  font-size: 3rem;
-  color: white;
+  font-size  : 3rem;
+  color      : white;
 }
 
 #close-modal:hover {
   opacity: 1;
-  cursor: pointer;
-  color: rgb(255, 53, 53);
+  cursor : pointer;
+  color  : rgb(255, 53, 53);
 }
