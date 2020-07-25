@@ -1,9 +1,9 @@
-import {includeHTML} from '../include_html.js'
+import { includeHTML } from '../include_html.js'
 
 const ANIMATION_TIME = 500;
 const closeModal = document.getElementById('close-modal');
 const modal = document.getElementsByClassName('modal')[0];
-const showModal = document.getElementById('show-modal-btn');
+const showModalBtns = document.getElementsByClassName('show-modal-btn');
 
 // TODO: pack the related function into an object
 
@@ -32,7 +32,7 @@ function insert_data_to_table(table, json) {
   for (let key in json) {
     if (key != 'subprocess') {
       table.children().eq(index).children().eq(0).text(key);
-      table.children().eq(index).children().eq(1).text(json[key]);
+      table.children().eq(index).children().eq(1).html(json[key]);
     } else {
       table.children().eq(index).children().eq(0).text(key);
       let text = '';
@@ -248,11 +248,22 @@ $(document).ready(function () {
   closeModal.onclick = function () {
     modal.style.display = 'none';
   }
-  showModal.onclick = function (){
-    let offset_x = document.documentElement.scrollLeft.toString();
-    let offset_y = document.documentElement.scrollTop.toString();
-    modal.style.left = offset_x + 'px';
-    modal.style.top = offset_y + 'px';
-    modal.style.display = 'block';
-  }
+
+  // showModal.onclick = function (){
+  //   let offset_x = document.documentElement.scrollLeft.toString();
+  //   let offset_y = document.documentElement.scrollTop.toString();
+  //   modal.style.left = offset_x + 'px';
+  //   modal.style.top = offset_y + 'px';
+  //   modal.style.display = 'block';
+  // }
+  $(document).on('click', '.show-modal-btn', function () {
+    setTimeout(function(){
+      let offset_x = document.documentElement.scrollLeft.toString();
+      let offset_y = document.documentElement.scrollTop.toString();
+      modal.style.left = offset_x + 'px';
+      modal.style.top = offset_y + 'px';
+      modal.style.display = 'block';
+    }, 500);
+
+  });
 });
