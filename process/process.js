@@ -4,6 +4,7 @@ const ANIMATION_TIME = 500;
 const closeModal = document.getElementById('close-modal');
 const modal = document.getElementsByClassName('modal')[0];
 const showModalBtns = document.getElementsByClassName('show-modal-btn');
+const svgPath = document.getElementById('svg-path');
 
 // TODO: pack the related function into an object
 
@@ -204,9 +205,23 @@ function get_template_index(obj) {
   return { 'col': col_num, 'arrIdx': arr_idx, 'parent': parent_num };
 }
 
+function update_path(selected_card, template_index) {
+  //clear next col path
+  console.log(template_index);
+  //get parent position and 
+  console.log(selected_card.position())
+
+  let pos = selected_card.position();
+  let path = $('<path></path>');
+  // path.attr('d', 'M'+ pos.top +' '+ pos.left +'L50 30');
+  path.attr('d', 'M'+ 3000 +' '+ 3000 +'L50 30');
+  $(svgPath).append( path );
+  $(svgPath).html($(svgPath).html());
+}
+
 function click_div_card(selected_card, card_arr) {
   let template_index = get_template_index(selected_card);
-  console.debug('Selected card ', 'col:' + template_index['col'], 'arrIdx:' + template_index['arrIdx'], 'parent:' + template_index['parent'])
+  console.log('Selected card ', 'col:' + template_index['col'], 'arrIdx:' + template_index['arrIdx'], 'parent:' + template_index['parent'])
 
   // Clear sub sub div.col
   $('.col').slice(Number(template_index['col']) + 2).children().hide(ANIMATION_TIME);
@@ -218,13 +233,14 @@ function click_div_card(selected_card, card_arr) {
     Number(template_index['arrIdx']),
     card_arr);
 
+  //draw path
+  update_path(selected_card, template_index);
+
   //scroll
-  window.scroll(selected_card.position().left - selected_card.width() / 0.7, selected_card.position().top - selected_card.height() / 3);
+  // window.scroll(selected_card.position().left - selected_card.width() / 0.7, selected_card.position().top - selected_card.height() / 3);
 }
 
-$(document).ready(function () {
-  includeHTML();
-
+function parse_json(){
   $.getJSON("format.json", function (json) {
     // Parse each json data to div card
     // Then store these div object to a array
@@ -241,29 +257,33 @@ $(document).ready(function () {
     });
     //init UI rendering
     click_div_card($('div.card.col-0').eq(0), card_arr);
-  })
+  });
 
+  return new Promise(function(resolve, reject){
+    resolve();
+  });
+}
+
+$(document).ready(function () {
+  includeHTML();
+
+  parse_json();
 
   //control modal
   closeModal.onclick = function () {
     modal.style.display = 'none';
   }
 
-  // showModal.onclick = function (){
-  //   let offset_x = document.documentElement.scrollLeft.toString();
-  //   let offset_y = document.documentElement.scrollTop.toString();
-  //   modal.style.left = offset_x + 'px';
-  //   modal.style.top = offset_y + 'px';
-  //   modal.style.display = 'block';
-  // }
+  //click first card
   $(document).on('click', '.show-modal-btn', function () {
-    setTimeout(function(){
+    setTimeout(function () {
       let offset_x = document.documentElement.scrollLeft.toString();
       let offset_y = document.documentElement.scrollTop.toString();
       modal.style.left = offset_x + 'px';
       modal.style.top = offset_y + 'px';
       modal.style.display = 'block';
     }, 500);
-
   });
+
+  console.log('AAAAAA', document.body.scrollHeight);
 });

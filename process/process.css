@@ -1,3 +1,7 @@
+:root {
+  --canvas-width: 3000px;
+}
+
 * {
   box-sizing: border-box;
   padding   : 0;
@@ -38,7 +42,7 @@ td.value {
 }
 
 div.container {
-  width: 3000px;
+  width: var(--canvas-width);
 }
 
 div.row {
@@ -55,7 +59,7 @@ div.col {
   max-width     : 500px;
   display       : inline-block;
   vertical-align: middle;
-  margin        : 5px;
+  margin        : 5px 15px;
   border-radius : 10px;
 }
 
@@ -92,4 +96,23 @@ div.card.focus {
   opacity: 1;
   cursor : pointer;
   color  : rgb(255, 53, 53);
+}
+
+#path-container {
+  position: absolute;
+  z-index: 1;
+  /* width: var(--canvas-width); */
+  pointer-events: none;
+  height: 100%;
+}
+
+#svg-path {
+  width: var(--canvas-width);
+  /* height: 100%; */
+}
+
+path {
+  fill:none;
+  stroke:red;
+  stroke-width:3;
 }
