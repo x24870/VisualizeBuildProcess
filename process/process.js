@@ -207,36 +207,36 @@ function get_template_index(obj) {
 
 function update_path(selected_card, template_index) {
   //clear next col path
-  for (let i = template_index.col; i < max_col; i++){
-    console.log('p'+i);
-    $('.p'+i).remove();
+  for (let i = template_index.col; i < max_col; i++) {
+    console.log('p' + i);
+    $('.p' + i).remove();
   }
-  // let path_class_to_rm = '.p-' + template_index.col + '-' + (parseInt(template_index.col) + 1);
-  // $(path_class_to_rm).remove();
-  // console.log(path_class_to_rm);
-  // console.log( $(path_class_to_rm) );
 
   // draw path
   let parent = document.querySelector('.arrIdx-' + template_index.parent);
   if (parent) {
     //get path start point (parent card)
     parent = $(parent);
-    let p_vertial = parent.position().top + parent.height() / 2;
-    let p_horizontal = parent.position().left + parent.width();
-
+    let p_vertical = Math.round(parent.position().top + parent.height() / 2);
+    let p_horizontal = Math.round(parent.position().left + parent.width());
 
     //get path end point (selected card)
-    let s_vertial = selected_card.position().top + selected_card.height() / 2;
-    let s_horizontal = selected_card.position().left + 5;
+    let s_vertical = Math.round(selected_card.position().top + selected_card.height() / 2);
+    let s_horizontal = Math.round(selected_card.position().left + 5);
+
+    //get middle point
+    let middle_point = Math.round(p_horizontal + (s_horizontal - p_horizontal) / 2);
 
     let path = $('<path></path>');
     path.attr('d',
       'M' +
-      p_horizontal.toFixed(0) + ' ' +
-      p_vertial.toFixed(0) + ' ' +
+      p_horizontal + ' ' + p_vertical + ' ' +
       'L' +
-      s_horizontal.toFixed(0) + ' ' +
-      s_vertial.toFixed(0)
+      middle_point + ' ' + p_vertical + ' ' +
+      'L' +
+      middle_point + ' ' + s_vertical + ' ' +
+      'L' +
+      s_horizontal + ' ' + s_vertical
     );
 
     path.attr('class', 'p' + template_index.col);
@@ -296,9 +296,9 @@ function init_svg() {
   $('#path-container').height(document.body.scrollHeight);
 
   // find max col number
-  $('.col').each(function(){
+  $('.col').each(function () {
     let col_num = $(this).attr('class').split('col-')[1];
-    if (max_col < col_num){
+    if (max_col < col_num) {
       max_col = col_num;
     }
   });
