@@ -1,9 +1,10 @@
-import {includeHTML} from '../include_html.js'
+import { includeHTML } from '../include_html.js'
 
 const ANIMATION_TIME = 500;
 const closeModal = document.getElementById('close-modal');
 const modal = document.getElementsByClassName('modal')[0];
-const showModal = document.getElementById('show-modal-btn');
+const svgPath = document.getElementById('svg-path');
+let max_col = 0;
 
 // TODO: pack the related function into an object
 
@@ -32,7 +33,7 @@ function insert_data_to_table(table, json) {
   for (let key in json) {
     if (key != 'subprocess') {
       table.children().eq(index).children().eq(0).text(key);
-      table.children().eq(index).children().eq(1).text(json[key]);
+      table.children().eq(index).children().eq(1).html(json[key]);
     } else {
       table.children().eq(index).children().eq(0).text(key);
       let text = '';
@@ -204,6 +205,47 @@ function get_template_index(obj) {
   return { 'col': col_num, 'arrIdx': arr_idx, 'parent': parent_num };
 }
 
+function update_path(selected_card, template_index) {
+  //clear next col path
+  for (let i = template_index.col; i < max_col; i++) {
+    console.log('p' + i);
+    $('.p' + i).remove();
+  }
+
+  // draw path
+  let parent = document.querySelector('.arrIdx-' + template_index.parent);
+  if (parent) {
+    //get path start point (parent card)
+    parent = $(parent);
+    let p_vertical = Math.round(parent.position().top + parent.height() / 2);
+    let p_horizontal = Math.round(parent.position().left + parent.width());
+
+    //get path end point (selected card)
+    let s_vertical = Math.round(selected_card.position().top + selected_card.height() / 2);
+    let s_horizontal = Math.round(selected_card.position().left + 5);
+
+    //get middle point
+    let middle_point = Math.round(p_horizontal + (s_horizontal - p_horizontal) / 2);
+
+    let path = $('<path></path>');
+    path.attr('d',
+      'M' +
+      p_horizontal + ' ' + p_vertical + ' ' +
+      'L' +
+      middle_point + ' ' + p_vertical + ' ' +
+      'L' +
+      middle_point + ' ' + s_vertical + ' ' +
+      'L' +
+      s_horizontal + ' ' + s_vertical
+    );
+
+    path.attr('class', 'p' + template_index.col);
+    $(svgPath).append(path);
+    $(svgPath).html($(svgPath).html());
+  }
+
+}
+
 function click_div_card(selected_card, card_arr) {
   let template_index = get_template_index(selected_card);
   console.debug('Selected card ', 'col:' + template_index['col'], 'arrIdx:' + template_index['arrIdx'], 'parent:' + template_index['parent'])
@@ -218,41 +260,70 @@ function click_div_card(selected_card, card_arr) {
     Number(template_index['arrIdx']),
     card_arr);
 
+  //draw path
+  update_path(selected_card, template_index);
+
   //scroll
   window.scroll(selected_card.position().left - selected_card.width() / 0.7, selected_card.position().top - selected_card.height() / 3);
+}
+
+function parse_json() {
+  return new Promise(function (resolve, reject) {
+    $.getJSON("format.json", function (json) {
+      // Parse each json data to div card
+      // Then store these div object to a array
+      let card_arr = [];
+      let parent_queue = [];
+      parse_json_to_gen_card(json, 0, 0, parent_queue, card_arr);
+      // Create the container for contain div card
+      let container = init_template(card_arr);
+      // Insert the cards to div.col
+      arrange_card(container, card_arr);
+      // Bind action
+      $('div.card').bind('click', function () {
+        click_div_card($(this), card_arr);
+      });
+      //init UI rendering
+      click_div_card($('div.card.col-0').eq(0), card_arr);
+
+      resolve('ok');
+    });
+  });
+}
+
+function init_svg() {
+  $('#svg-path').height(document.body.scrollHeight);
+  $('#path-container').height(document.body.scrollHeight);
+
+  // find max col number
+  $('.col').each(function () {
+    let col_num = $(this).attr('class').split('col-')[1];
+    if (max_col < col_num) {
+      max_col = col_num;
+    }
+  });
 }
 
 $(document).ready(function () {
   includeHTML();
 
-  $.getJSON("format.json", function (json) {
-    // Parse each json data to div card
-    // Then store these div object to a array
-    let card_arr = [];
-    let parent_queue = [];
-    parse_json_to_gen_card(json, 0, 0, parent_queue, card_arr);
-    // Create the container for contain div card
-    let container = init_template(card_arr);
-    // Insert the cards to div.col
-    arrange_card(container, card_arr);
-    // Bind action
-    $('div.card').bind('click', function () {
-      click_div_card($(this), card_arr);
-    });
-    //init UI rendering
-    click_div_card($('div.card.col-0').eq(0), card_arr);
-  })
-
+  parse_json().then(function () {
+    init_svg();
+  });
 
   //control modal
   closeModal.onclick = function () {
     modal.style.display = 'none';
   }
-  showModal.onclick = function (){
-    let offset_x = document.documentElement.scrollLeft.toString();
-    let offset_y = document.documentElement.scrollTop.toString();
-    modal.style.left = offset_x + 'px';
-    modal.style.top = offset_y + 'px';
-    modal.style.display = 'block';
-  }
+
+  //click first card
+  $(document).on('click', '.show-modal-btn', function () {
+    setTimeout(function () {
+      let offset_x = document.documentElement.scrollLeft.toString();
+      let offset_y = document.documentElement.scrollTop.toString();
+      modal.style.left = offset_x + 'px';
+      modal.style.top = offset_y + 'px';
+      modal.style.display = 'block';
+    }, 500);
+  });
 });
